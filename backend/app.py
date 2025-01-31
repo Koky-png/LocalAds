@@ -4,14 +4,13 @@ from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
-# from marshmallow import Schema, fields
+from marshmallow import Schema, fields
 
 app = Flask(__name__)
 
-# Configuration
 app.config['SECRET_KEY'] = 'your_secret_key'  # Replace with a strong secret key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///your_database.db'  # Or your database URI
-app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key' # Replace with a strong JWT secret key
+app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'  # Replace with a strong JWT secret key
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -45,7 +44,7 @@ class User(db.Model):
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    ads = db.relationship('Ad', backref='seller') # Relationship with ads
+    ads = db.relationship('Ad', backref='seller')  # Relationship with ads
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -68,8 +67,7 @@ class Ad(db.Model):
     def __repr__(self):
         return f'<Ad {self.title}>'
 
-
-# API Endpoints
+# Routes
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -108,7 +106,7 @@ def login():
 @app.route('/ads', methods=['GET'])
 def get_ads():
     ads = Ad.query.all()
-    return ads_schema.jsonify(ads, many=True), 200  # Serialize multiple ads
+    return jsonify(ads_schema.dump(ads)), 200
 
 @app.route('/ads', methods=['POST'])
 @jwt_required()
@@ -130,19 +128,7 @@ def create_ad():
 
     return ad_schema.jsonify(new_ad), 201
 
-# ... (Add other endpoints for updating, deleting ads, user profile, etc.)
-
-
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all() # Create tables if they don't exist
+        db.create_all()  # Create database tables
     app.run(debug=True)
-    from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate  # Import Migrate
-
-app = Flask(__name__)
-# ... (your app configuration)
-
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)  # Initialize Migrate
