@@ -9,7 +9,7 @@ from marshmallow import Schema, fields
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'your_secret_key'  # Replace with a strong secret key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///your_database.db'  # Or your database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://local_ad_user:SxB2KaNl1AKK5NKFqQrr5TMfwTSJ8f0e@dpg-cuejjv3tq21c73ehotg0-a.oregon-postgres.render.com/local_ad'  # Or your database URI
 app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'  # Replace with a strong JWT secret key
 
 db = SQLAlchemy(app)
