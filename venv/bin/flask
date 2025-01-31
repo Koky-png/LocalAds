@@ -1,4 +1,4 @@
-#!/home/iris/Desktop/school/code/4/python-p4-project-template/venv/bin/python3
+#!/home/iris/Desktop/school/code/4/python-p4-project-template/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

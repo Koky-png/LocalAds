@@ -36,10 +36,14 @@ function Navbar() {
                 Register
               </Link>
             </li>
-            <li className="nav-item">
-              <Link to="/create-ad" className="nav-link">
+            <li className="nav-item dropdown">
+              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Create Ad
-              </Link>
+              </a>
+              <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><Link to="/create-ad" className="dropdown-item">New Ad</Link></li>
+                <li><Link to="/my-ads" className="dropdown-item">Manage Ads</Link></li>
+              </ul>
             </li>
           </ul>
         </div>

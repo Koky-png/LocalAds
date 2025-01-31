@@ -1,103 +1,158 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f9fa; /* Light background for a clean look */
-  min-height: 100vh; /* Ensure the page takes up the full height */
+/* General Reset */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Color Palette */
+:root {
+  --primary-color: #1e3a8a; /* Dark Blue */
+  --secondary-color: #2563eb; /* Blue */
+  --accent-color: #22c55e; /* Green */
+  --background-color: #f1f5f9; /* Light Gray */
+  --text-color: #374151; /* Dark Gray */
+  --white: #ffffff; /* White */
+  --light-gray: #e5e7eb; /* Lighter Gray */
+}
+
+/* Full-Screen Container */
+.app-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--primary-color);
+  padding: 1rem 2rem;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: var(--white);
+}
+
+.nav-link {
+  color: var(--white);
+}
+
+.nav-link:hover {
+  color: var(--accent-color);
+}
+
+/* Main Content */
+main {
+  flex-grow: 1;
+  padding: 4rem 2rem;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  background-color: var(--background-color);
 }
 
-.logo {
-  height: 8em; /* Slightly larger logo */
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms, transform 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-  transform: scale(1.1); /* Add a slight zoom effect on hover */
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
+/* Card Styles */
 .card {
-  padding: 2em;
-  background-color: #ffffff; /* White background for cards */
-  border-radius: 12px; /* Rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  transition: transform 300ms, box-shadow 300ms;
-  width: 100%;
-  max-width: 400px; /* Limit card width for better readability */
+  background-color: var(--white);
+  border: 1px solid var(--light-gray);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.card:hover {
-  transform: translateY(-5px); /* Lift card on hover */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+/* Footer */
+footer {
+  background-color: var(--primary-color);
+  color: var(--white);
+  text-align: center;
+  padding: 1.5rem 0;
 }
 
-.read-the-docs {
-  color: #6c757d; /* Muted gray for secondary text */
-  font-size: 0.9em;
-  margin-top: 2em;
+footer img {
+  max-height: 40px;
 }
 
-/* Additional Styles for a Modern Look */
-h1 {
-  font-size: 2.5em;
-  color: #343a40; /* Dark gray for headings */
-  margin-bottom: 1em;
+footer p {
+  margin: 0;
+  font-size: 1rem;
 }
 
-p {
-  color: #495057; /* Medium gray for paragraphs */
-  line-height: 1.6;
-}
-
+/* Buttons */
 button {
-  background-color: #646cff; /* Primary button color */
-  color: white;
+  background-color: var(--secondary-color);
+  color: var(--white);
   border: none;
-  padding: 0.75em 1.5em;
+  padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  font-size: 1em;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 300ms, transform 300ms;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #535bf2; /* Darker shade on hover */
-  transform: scale(1.05); /* Slight zoom effect on hover */
+  background-color: var(--accent-color);
 }
 
-a {
-  color: #646cff; /* Link color */
-  text-decoration: none;
-  transition: color 300ms;
+/* Responsive Design */
+@media (max-width: 1440px) { /* Optimized for larger laptops */
+  .navbar {
+    padding: 1rem 1.5rem;
+  }
+
+  main {
+    padding: 3rem 1.5rem;
+  }
+
+  .card {
+    max-width: 900px; /* Increase card width slightly for larger screens */
+  }
 }
 
-a:hover {
-  color: #535bf2; /* Darker shade on hover */
+@media (max-width: 1200px) { 
+  .navbar {
+    padding: 1rem;
+  }
+
+  main {
+    padding: 2.5rem 1rem;
+  }
+
+  .card {
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 768px) { 
+  .navbar {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  main {
+    padding: 2rem 1rem;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 1440px) { 
+  .navbar {
+    padding: 1.5rem 3rem;
+  }
+
+  main {
+    padding: 5rem 3rem;
+  }
+
+  .card {
+    max-width: 1000px;
+  }
 }

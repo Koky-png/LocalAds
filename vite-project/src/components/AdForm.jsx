@@ -1,41 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
 
 function AdForm() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [error, setError] = useState(null);
+  const [ad, setAd] = useState({
+    title: "",
+    description: "",
+    price: "",
+    imageUrl: "",
+    sellerName: "",
+  });
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleChange = (e) => {
+    setAd({ ...ad, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('/ads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title, description, price }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create ad');
-      }
-
-      const data = await response.json();
-      console.log('Ad created successfully:', data);
-      // Redirect to home page after successful ad creation
-      window.location.href = '/';
-    } catch (err) {
-      setError(err.message);
+      await axios.post("/ads", ad);
+      alert("Ad created successfully!");
+    } catch (error) {
+      console.error("Error creating ad:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* ... (rest of the form elements as before) */}
+    <form onSubmit={handleSubmit} className="p-4 border rounded shadow-sm">
+      <div className="mb-3">
+        <label className="form-label">Title</label>
+        <input
+          type="text"
+          name="title"
+          className="form-control"
+          value={ad.title}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Description</label>
+        <textarea
+          name="description"
+          className="form-control"
+          value={ad.description}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Price</label>
+        <input
+          type="number"
+          name="price"
+          className="form-control"
+          value={ad.price}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Image URL</label>
+        <input
+          type="text"
+          name="imageUrl"
+          className="form-control"
+          value={ad.imageUrl}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Seller Name</label>
+        <input
+          type="text"
+          name="sellerName"
+          className="form-control"
+          value={ad.sellerName}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <button type="submit" className="btn btn-primary w-100">Create Ad</button>
     </form>
   );
 }

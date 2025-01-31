@@ -1,17 +1,21 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./App.css";
-import Home from "./pages/Home";
-import CreateAd from "./pages/Createad";
-import Login from './pages/Login';
-import Profile from "./pages/Profile";
-import Register from "./pages/Register";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import CreateAd from "./pages/Createad";
+import BrowseAds from "./pages/BrowseAd";
+import PostAd from "./pages/PostAd"; 
 import { UserProvider } from "./Context/Usercontext";
-function App() {
+import './App.css';
+
+
+const App = () => {
   return (
-    <BrowserRouter>
-     <UserProvider>
+    <Router>
+      <UserProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -19,11 +23,13 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="profile" element={<Profile />} />
             <Route path="create-ad" element={<CreateAd />} />
+            <Route path="browse-ads" element={<BrowseAds />} />
+            <Route path="post-ad" element={<PostAd />} /> {/* Add this route */}
           </Route>
         </Routes>
-        </UserProvider>
-    </BrowserRouter>
+      </UserProvider>
+    </Router>
   );
-}
+};
 
 export default App;
