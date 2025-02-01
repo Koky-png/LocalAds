@@ -1,7 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../Context/Usercontext";
 
 function Navbar() {
+  const { setAuthToken } = useContext(UserContext); // Get auth management
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setAuthToken(null); // Remove auth token from context
+    localStorage.removeItem("authToken"); // Clear auth token from localStorage
+    navigate("/login"); // Redirect to login page
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container-fluid">
@@ -36,14 +46,10 @@ function Navbar() {
                 Register
               </Link>
             </li>
-            <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Create Ad
-              </a>
-              <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><Link to="/create-ad" className="dropdown-item">New Ad</Link></li>
-                <li><Link to="/my-ads" className="dropdown-item">Manage Ads</Link></li>
-              </ul>
+            <li className="nav-item">
+              <button className="btn btn-danger ms-3" onClick={handleLogout}>
+                Logout
+              </button>
             </li>
           </ul>
         </div>

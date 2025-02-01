@@ -18,7 +18,7 @@ export const UserProvider = ({ children }) => {
   // LOGIN functionality
   const login = (email, password) => {
     toast.loading("Logging you in ... ");
-    fetch("https://127.0.0.1:5000/login", {
+    fetch("https://python-p4-project-template-1.onrender.com/login", {
       method: "POST",
       headers: {
         'Content-type': 'application/json',
@@ -51,7 +51,7 @@ export const UserProvider = ({ children }) => {
   const logout = () => {
 
 toast.loading("Logging you out ... ");
-fetch("https://127.0.0.1:5000/logout", {
+fetch("https://python-p4-project-template-1.onrender.com/logout", {
   method: "DELETE",
   headers: {
     'Content-type': 'application/json',
@@ -80,7 +80,7 @@ fetch("https://127.0.0.1:5000/logout", {
   const fetchCurrentUser = (token) => {
     if (!token) return;  // Avoid fetching if no token is available
 
-fetch('https://127.0.0.1:5000/current_user', {
+fetch('https://python-p4-project-template-1.onrender.com/current_user', {
   method: "GET",
   headers: {
     'Content-type': 'application/json',
@@ -109,7 +109,7 @@ fetch('https://127.0.0.1:5000/current_user', {
   // ADD User (registration)
   const addUser = (username, email, password) => {
     toast.loading("Registering ... ");
-    fetch("https://127.0.0.1:5000/users", {
+    fetch("https://python-p4-project-template-1.onrender.com/users", {
       method: "POST",
       headers: {
         'Content-type': 'application/json',
@@ -137,7 +137,7 @@ fetch('https://127.0.0.1:5000/current_user', {
     if (!authToken) return false;
 
     try {
-      const response = await fetch("https://127.0.0.1:5000/update_profile", {
+      const response = await fetch("https://python-p4-project-template-1.onrender.com/update_profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

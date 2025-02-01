@@ -1,46 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../Context/Usercontext";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const { setAuthToken } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email === "user@example.com" && password === "password") {
-      alert("Login successful!");
-      navigate("/");
+    const response = await fetch("http://localhost:5000/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      setAuthToken(data.access_token);
+      navigate("/browse-ads"); // Redirect to ads page
     } else {
-      alert("Invalid email or password.");
+      alert(data.error);
     }
   };
 
   return (
     <div className="container py-5">
-      <h1 className="text-center mb-4">Login</h1>
-      <form onSubmit={handleSubmit} className="shadow p-4 rounded">
+      <h1 className="text-center">Login</h1>
+      <form onSubmit={handleLogin} className="shadow p-4 rounded">
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input
-            type="email"
-            id="email"
-            className="form-control"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <label>Email</label>
+          <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input
-            type="password"
-            id="password"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <label>Password</label>
+          <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
         <button type="submit" className="btn btn-primary w-100">Login</button>
       </form>

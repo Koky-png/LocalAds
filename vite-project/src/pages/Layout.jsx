@@ -1,13 +1,23 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useContext } from "react";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../Context/Usercontext";
 
 const Layout = () => {
+  const { setAuthToken } = useContext(UserContext); // Get authentication context
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setAuthToken(null); // Remove auth token from context
+    localStorage.removeItem("authToken"); // Clear auth token from localStorage
+    navigate("/login"); // Redirect to login page
+  };
+
   return (
     <>
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary py-3">
         <div className="container">
-          <a className="navbar-brand d-flex align-items-center" href="/">
+          <Link to="/" className="navbar-brand d-flex align-items-center">
             <img
               src="/path-to-your-logo.svg" // Replace with your logo path
               alt="Logo"
@@ -15,7 +25,7 @@ const Layout = () => {
               style={{ height: "40px" }}
             />
             <span>MyWebsite</span>
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -30,24 +40,24 @@ const Layout = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <a className="nav-link" href="/">
+                <Link to="/" className="nav-link">
                   Home
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/login">
+                <Link to="/login" className="nav-link">
                   Login
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/register">
+                <Link to="/register" className="nav-link">
                   Register
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/create-ad">
-                  Create Ad
-                </a>
+                <button className="btn btn-danger ms-3" onClick={handleLogout}>
+                  Logout
+                </button>
               </li>
             </ul>
           </div>
