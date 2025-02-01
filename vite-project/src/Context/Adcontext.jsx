@@ -8,7 +8,7 @@ export const AdProvider = ({ children }) => {
 
   // Fetch all ads
   useEffect(() => {
-    fetch("http://localhost:5000/ads")
+    fetch("https://python-p4-project-template-2.onrender.com/ads")
       .then((response) => response.json())
       .then((data) => {
         setAds(data);
@@ -19,7 +19,7 @@ export const AdProvider = ({ children }) => {
 
   // Post new ad
   const addAd = (title, description, price, image_url) => {
-    fetch("http://localhost:5000/ads", {
+    fetch("https://python-p4-project-template-2.onrender.com/ads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, description, price, image_url }),
