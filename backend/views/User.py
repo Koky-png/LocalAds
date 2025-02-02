@@ -7,35 +7,40 @@ user_bp = Blueprint('user_bp', __name__)
 
 # Register User
 # Add user
+
 @user_bp.route("/users", methods=["POST"])
 def add_users():
-    data = request.get_json()
-    username = data['username']
-    email = data['email']
-    password_hash = generate_password_hash(data['password_hash'])
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')  # ✅ Fix password field name
 
-    check_username = User.query.filter_by(username=username).first()
-    check_email = User.query.filter_by(email=email).first()
+        # ✅ Validate input
+        if not username or not email or not password:
+            return jsonify({"error": "Username, email, and password are required"}), 400
 
-    print("Email ",check_email)
-    print("Username",check_username)
-    if check_username or check_email:
-        return jsonify({"error":"Username/email exists"}),406
+        # ✅ Hash the password correctly
+        password_hash = generate_password_hash(password)
 
-    else:
+        # ✅ Check if username or email already exists
+        check_username = User.query.filter_by(username=username).first()
+        check_email = User.query.filter_by(email=email).first()
+
+        print("Checking existing users...")
+        print("Email:", check_email)
+        print("Username:", check_username)
+
+        if check_username or check_email:
+            return jsonify({"error": "Username or email already exists"}), 406
+
+        # ✅ Create new user
         new_user = User(username=username, email=email, password_hash=password_hash)
         db.session.add(new_user)
         db.session.commit()
-        # try:
-        #     msg = Message(
-        #         subject="Welcome to Todo App",
-        #         sender=app.config["MAIL_DEFAULT_SENDER"],
-        #         recipients=[email],
-        #         body="This is a test email sent from a Flask Application"
 
-        #     )
-        #     mail.send(msg)
-        return jsonify({"msg":"User saved successfully!"}), 201
-        
-        # except Exception as e:
-        #     return jsonify({"error": f"Failed to send {e}"}), 406
+        return jsonify({"msg": "User saved successfully!"}), 201  # ✅ Fix indentation
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"User registration failed: {str(e)}"}), 500

@@ -116,31 +116,45 @@ const fetchCurrentUser = () =>
   });
 };
 
-  // ADD User (registration)
-  const addUser = (username, email, password_hash ) => {
-    toast.loading("Registering ... ");
-    fetch("http://127.0.0.1:5000/users", {
-      method: "POST",
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({ username, email, password_hash  }),
-    })
-      .then((resp) => resp.json())
-      .then((response) => {
-        if (response.msg) {
-          toast.dismiss();
-          toast.success(response.msg);
-          navigate("/login");
-        } else if (response.error) {
-          toast.dismiss();
-          toast.error(response.error);
-        } else {
-          toast.dismiss();
-          toast.error("Failed to add user");
-        }
-      });
+const addUser = (username, email, password) => 
+  {
+      toast.loading("Registering ... ")
+      fetch("http://127.0.0.1:5000/users",{
+          method:"POST",
+          headers: {
+              'Content-type': 'application/json',
+            },
+          body: JSON.stringify({
+              username, email, password
+          })
+      })
+      .then((resp)=>resp.json())
+      .then((response)=>{
+          console.log(response);
+          
+          if(response.msg){
+              toast.dismiss()
+              toast.success(response.msg)
+              navigate("/login")
+          }
+          else if(response.error){
+              toast.dismiss()
+              toast.error(response.error)
+
+          }
+          else{
+              toast.dismiss()
+              toast.error("Failed to add")
+
+          }
+        
+          
+      })
+
+      
   };
+
+
 
   // Function to update user (placeholder)
   const updateUser = async (updatedData) => {

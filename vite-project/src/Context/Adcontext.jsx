@@ -4,7 +4,7 @@ export const AdContext = createContext();
 
 export const AdProvider = ({ children }) => {
   const [ads, setAds] = useState([]);
-  const [loading, setLoading] = useState(true);
+ 
 
   // Fetch all ads
   useEffect(() => {
@@ -110,6 +110,7 @@ export const AdProvider = ({ children }) => {
     }
     const data = {
       ads,
+     
  
   
       addAd,
@@ -117,7 +118,7 @@ export const AdProvider = ({ children }) => {
       deleteAd,
     }
   return (
-    <AdContext.Provider value={{ ads, addAd, loading }}>
+    <AdContext.Provider>
       {children}
     </AdContext.Provider>
   );

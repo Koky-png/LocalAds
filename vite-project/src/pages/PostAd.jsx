@@ -2,15 +2,23 @@ import React, { useState, useContext } from "react";
 import { AdContext } from "../Context/Adcontext";
 
 function PostAd() {
-  const { addAd } = useContext(AdContext);
+  const context = useContext(AdContext);
+
+  if (!context) {
+    console.error("AdContext is undefined. Ensure AdProvider is wrapping the component.");
+    return <h3 className="text-danger text-center mt-5">AdContext Error: Ensure AdProvider is wrapping this component.</h3>;
+  }
+
+  const { addAd } = context;  // ✅ Fix: Prevents undefined destructuring
+
   const [ad, setAd] = useState({ title: "", description: "", price: "" });
 
   const handleChange = (e) => setAd({ ...ad, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addAd(ad.title, ad.description, ad.price, );
-    setAd({ title: "", description: "", price: ""});
+    addAd(ad.title, ad.description, ad.price);  // ✅ Fix: Ensure function exists
+    setAd({ title: "", description: "", price: "" });
     alert("Ad posted successfully!");
   };
 
