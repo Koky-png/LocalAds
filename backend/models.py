@@ -45,3 +45,8 @@ class Message(db.Model):
 
     def __repr__(self):
         return f"<Message {self.message_id} - Ad {self.ad_id} - User {self.user_id}>"
+    
+class TokenBlocklist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(36), nullable=False, index=True)
+    created_at = db.Column(db.DateTime, nullable=False)

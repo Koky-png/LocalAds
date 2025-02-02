@@ -8,27 +8,27 @@ export const AdProvider = ({ children }) => {
 
   // Fetch all ads
   useEffect(() => {
-    fetch("https://python-p4-project-template-2.onrender.com/ads")
+    fetch("http://127.0.0.1:5000/ads")
       .then((response) => response.json())
-      .then((data) => {
-        setAds(data);
-        setLoading(false);
+      .then((response) => {
+        setAds(response);
+       
       })
       .catch((error) => console.error("Error fetching ads:", error));
   }, []);
 
   // Post new ad
-  const addAd = (title, description, price, image_url) => {
-    fetch("https://python-p4-project-template-2.onrender.com/ads", {
+  const addAd = (title, description, price) => {
+    fetch("http://127.0.0.1:5000/ads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, description, price, image_url }),
+      body: JSON.stringify({ title, description, price }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.ad_id) {
           setAds((prevAds) => [
-            { id: data.ad_id, title, description, price, image_url },
+            { id: data.ad_id, title, description, price },
             ...prevAds,
           ]);
         } else {
@@ -37,7 +37,85 @@ export const AdProvider = ({ children }) => {
       })
       .catch((error) => console.error("Error posting ad:", error));
   };
+  const updateAd = (id, name, description, scheduled_time) => {
 
+      fetch(`http://127.0.0.1:5000/ads${id}`, {
+          method: "PUT",
+          headers: {
+              "Content-type": "application/json",
+              Authorization:`Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+              name,
+              description,
+              scheduled_time,
+          }),
+      })
+      .then((resp) => resp.json())
+      .then((response) => {
+          toast.dismiss();
+          if (response.success) {
+              toast.success(response.success);
+              setOnChange(!onChange); 
+          } else if (response.error) {
+              toast.error(response.error);
+          } else {
+              toast.error("Failed to update Activity");
+          }
+      })
+      .catch((error) => {
+          toast.dismiss();
+          toast.error("Error updating Activity");
+          console.error("Update Error:", error);
+      });
+      };
+
+
+
+  
+  const deleteAd = (id) => 
+    {
+        toast.loading("Deleting todo ... ")
+        fetch(`http://127.0.0.1:5000/todo/${id}`,{
+            method:"DELETE",
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${authToken}`
+
+              }
+        })
+        .then((resp)=>resp.json())
+        .then((response)=>{
+            
+            if(response.success){
+                toast.dismiss()
+                toast.success(response.success)
+                setOnchange(!onChange)
+                navigate("/")
+
+            }
+            else if(response.error){
+                toast.dismiss()
+                toast.error(response.error)
+
+            }
+            else{
+                toast.dismiss()
+                toast.error("Failed to delete")
+
+            }
+          
+            
+        })
+    }
+    const data = {
+      ads,
+ 
+  
+      addAd,
+      updateAd,
+      deleteAd,
+    }
   return (
     <AdContext.Provider value={{ ads, addAd, loading }}>
       {children}

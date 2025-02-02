@@ -1,28 +1,37 @@
 import React, { useState, useContext } from "react";
-import { UserContext } from "../Context/Usercontext";
+import { UserContext } from "../Context/Usercontext"; // Ensure correct import
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login() {
-  const { setAuthToken } = useContext(UserContext);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { login } = useContext(UserContext); // Use login function from context
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false); // Prevent multiple submissions
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/api/users/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    setLoading(true);
 
-    const data = await response.json();
-    if (response.ok) {
-      setAuthToken(data.access_token);
-      navigate("/browse-ads"); // Redirect to ads page
-    } else {
-      alert(data.error);
+    try {
+      const success = await login(formData.email, formData.password);
+      if (success) {
+        navigate("/browse-ads"); // Redirect on successful login
+      }
+    } catch (error) {
+      toast.error(error.message || "Login failed. Please check your credentials.");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -31,13 +40,29 @@ function Login() {
       <form onSubmit={handleLogin} className="shadow p-4 rounded">
         <div className="mb-3">
           <label>Email</label>
-          <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            type="email"
+            name="email"
+            className="form-control"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="mb-3">
           <label>Password</label>
-          <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input
+            type="password"
+            name="password"
+            className="form-control"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
         </div>
-        <button type="submit" className="btn btn-primary w-100">Login</button>
+        <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

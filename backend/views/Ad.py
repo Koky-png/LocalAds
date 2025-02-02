@@ -11,10 +11,13 @@ ad_bp = Blueprint('ad_bp', __name__)
 def post_ad():
     try:
         data = request.get_json()
+
+        if not data:
+            return jsonify({'error': 'Invalid JSON data'}), 400
+
         title = data.get('title')
         description = data.get('description')
         price = data.get('price')
-        image_url = data.get('image_url', '')
         seller_id = get_jwt_identity()
 
         if not title or not description or price is None:
@@ -24,18 +27,16 @@ def post_ad():
             title=title,
             description=description,
             price=price,
-            image_url=image_url,
             seller_id=seller_id,
-            created_at=datetime.utcnow()
         )
         db.session.add(new_ad)
         db.session.commit()
 
         return jsonify({'msg': 'Ad posted successfully', 'ad_id': new_ad.id}), 201
+
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to post ad', 'details': str(e)}), 500
-
 
 # Get a single Ad
 @ad_bp.route('/ads/<int:ad_id>', methods=['GET'])
@@ -49,7 +50,6 @@ def get_ad(ad_id):
         'title': ad.title,
         'description': ad.description,
         'price': ad.price,
-        'image_url': ad.image_url,
         'seller_id': ad.seller_id,
         'status': ad.status,
         'created_at': ad.created_at
@@ -65,7 +65,6 @@ def get_ads():
         'title': ad.title,
         'description': ad.description,
         'price': ad.price,
-        'image_url': ad.image_url,
         'seller_id': ad.seller_id,
         'status': ad.status,
         'created_at': ad.created_at
@@ -91,7 +90,7 @@ def update_ad(ad_id):
         ad.title = data.get('title', ad.title)
         ad.description = data.get('description', ad.description)
         ad.price = data.get('price', ad.price)
-        ad.image_url = data.get('image_url', ad.image_url)
+       
         ad.status = data.get('status', ad.status)
 
         db.session.commit()
@@ -120,3 +119,4 @@ def delete_ad(ad_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to delete ad', 'details': str(e)}), 500
+    

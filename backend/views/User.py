@@ -6,35 +6,36 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 user_bp = Blueprint('user_bp', __name__)
 
 # Register User
-@user_bp.route('/api/users/register', methods=['POST'])
-def register_user():
-    try:
-        data = request.get_json()
-        username = data.get('username')
-        email = data.get('email')
-        password = data.get('password')
+# Add user
+@user_bp.route("/users", methods=["POST"])
+def add_users():
+    data = request.get_json()
+    username = data['username']
+    email = data['email']
+    password_hash = generate_password_hash(data['password_hash'])
 
-        if not username or not email or not password:
-            return jsonify({'error': 'Missing required fields'}), 400
+    check_username = User.query.filter_by(username=username).first()
+    check_email = User.query.filter_by(email=email).first()
 
-        if len(password) < 6:
-            return jsonify({'error': 'Password must be at least 6 characters long'}), 400
+    print("Email ",check_email)
+    print("Username",check_username)
+    if check_username or check_email:
+        return jsonify({"error":"Username/email exists"}),406
 
-        check_username = User.query.filter_by(username=username).first()
-        check_email = User.query.filter_by(email=email).first()
-
-        if check_username or check_email:
-            return jsonify({'error': 'User already exists'}), 400
-
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-
-        new_user = User(username=username, email=email, password_hash=hashed_password)
+    else:
+        new_user = User(username=username, email=email, password_hash=password_hash)
         db.session.add(new_user)
         db.session.commit()
+        # try:
+        #     msg = Message(
+        #         subject="Welcome to Todo App",
+        #         sender=app.config["MAIL_DEFAULT_SENDER"],
+        #         recipients=[email],
+        #         body="This is a test email sent from a Flask Application"
 
-        access_token = create_access_token(identity=new_user.id)
-        return jsonify({'msg': 'User created successfully', 'token': access_token}), 201
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': str(e)}), 500
+        #     )
+        #     mail.send(msg)
+        return jsonify({"msg":"User saved successfully!"}), 201
+        
+        # except Exception as e:
+        #     return jsonify({"error": f"Failed to send {e}"}), 406

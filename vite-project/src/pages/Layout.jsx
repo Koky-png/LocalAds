@@ -3,14 +3,8 @@ import { Outlet, Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../Context/Usercontext";
 
 const Layout = () => {
-  const { setAuthToken } = useContext(UserContext); // Get authentication context
+  const { authToken, logout } = useContext(UserContext); // Get authentication and logout methods
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    setAuthToken(null); // Remove auth token from context
-    localStorage.removeItem("authToken"); // Clear auth token from localStorage
-    navigate("/login"); // Redirect to login page
-  };
 
   return (
     <>
@@ -44,21 +38,33 @@ const Layout = () => {
                   Home
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/login" className="nav-link">
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/register" className="nav-link">
-                  Register
-                </Link>
-              </li>
-              <li className="nav-item">
-                <button className="btn btn-danger ms-3" onClick={handleLogout}>
-                  Logout
-                </button>
-              </li>
+              {!authToken ? (
+                <>
+                  <li className="nav-item">
+                    <Link to="/login" className="nav-link">
+                      Login
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to="/register" className="nav-link">
+                      Register
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="nav-item">
+                    <Link to="/profile" className="nav-link">
+                      Profile
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <button className="btn btn-danger ms-3" onClick={logout}>
+                      Logout
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>

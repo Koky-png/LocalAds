@@ -1,50 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../Context/Usercontext"; // Import UserContext
+import { toast } from "react-toastify";
 
 function Register() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
+  const { addUser } = useContext(UserContext);
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [loading, setLoading] = useState(false); // To prevent multiple submissions
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    const { username, email, password, confirmPassword } = formData;
+
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
 
-    const response = await fetch("http://127.0.0.1:5000/api/users/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      localStorage.setItem("token", data.token);
+    setLoading(true);
+    try {
+      await addUser(username, email, password);
       navigate("/login"); // Redirect to login page
-    } else {
-      setError(data.error || "Registration failed");
+    } catch (error) {
+      toast.error("Registration failed. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
     <div className="container py-5">
       <h1 className="text-center">Register</h1>
-      {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleRegister} className="shadow p-4 rounded">
         <div className="mb-3">
           <label>Username</label>
           <input
             type="text"
+            name="username"
             className="form-control"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={formData.username}
+            onChange={handleChange}
             required
           />
         </div>
@@ -52,9 +59,10 @@ function Register() {
           <label>Email</label>
           <input
             type="email"
+            name="email"
             className="form-control"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange}
             required
           />
         </div>
@@ -62,9 +70,10 @@ function Register() {
           <label>Password</label>
           <input
             type="password"
+            name="password"
             className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleChange}
             required
           />
         </div>
@@ -72,14 +81,15 @@ function Register() {
           <label>Confirm Password</label>
           <input
             type="password"
+            name="confirmPassword"
             className="form-control"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={formData.confirmPassword}
+            onChange={handleChange}
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100">
-          Register
+        <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
         </button>
       </form>
     </div>
