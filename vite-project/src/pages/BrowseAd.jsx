@@ -1,39 +1,44 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { AdContext } from "../Context/Adcontext";
+import { UserContext } from "../Context/Usercontext";
+import { toast } from "react-toastify";
 
-function BrowseAds() {
-  const { ads } = useContext(AdContext);
+export default function BrowseAds() {
+  const { ads, deleteAd } = useContext(AdContext);
+  const { current_user } = useContext(UserContext);
 
   return (
     <div className="container py-5">
       <h1 className="text-center">Browse Ads</h1>
-      
-        <p className="text-center">No ads available. Post an ad to see it here!</p>
-       (
-        <div className="row">
-          {ads.map((ad) => (
-            <div key={ad.id} className="col-md-4 mb-4">
-              <div className="card">
-
+      <div className="row">
+        {ads.length === 0 ? (
+          <p className="text-muted text-center">No ads available.</p>
+        ) : (
+          ads.map((ad) => (
+            <div key={ad.id} className="col-md-4 mb-3">
+              <div className="card shadow">
                 <div className="card-body">
                   <h5 className="card-title">{ad.title}</h5>
                   <p className="card-text">{ad.description}</p>
-                  <p className="card-text">
-                    <strong>Price:</strong> ${ad.price}
-
-                  </p>
-                  {/* <div className="flex justify-between item-center">
-                    <button onClick={() => deleteTrip(trip.id)} className='bg-red-600 px-2 py-1 text-white rounded hover:bg-red-400'>Delete</button>
-                    <div className="bg-gray-200 px-3 py-1 rounded-full text-xs font-medium text-gray-800 hidden md:block">{trip.status}</div>
-                  </div> */}
+                  <p className="text-primary fw-bold">${ad.price}</p>
+                  {/* Show Delete button only if the current user is the seller */}
+                  {current_user && current_user.id === ad.seller_id && (
+                    <button
+                      className="btn btn-danger btn-sm mt-2"
+                      onClick={() => {
+                        deleteAd(ad.id);
+                        toast.success("Ad deleted successfully!");
+                      }}
+                    >
+                      Delete Ad
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      )
+          ))
+        )}
+      </div>
     </div>
   );
 }
-
-export default BrowseAds;

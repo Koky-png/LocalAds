@@ -64,35 +64,47 @@ export const UserProvider = ({ children }) => {
             
         })
     };
-  // LOGOUT functionality
-  const logout = () => {
-
-toast.loading("Logging you out ... ");
-fetch("http://127.0.0.1:5000/logout", {
-  method: "DELETE",
-  headers: {
-    'Content-type': 'application/json',
-    'Authorization': `Bearer ${authToken}`,
-  },
-})
-  .then((resp) => resp.json())
-  .then((response) => {
+    const logout = () => {
+      return new Promise((resolve, reject) => {
+        if (!authToken) {
+          reject("No authentication token found.");
+          return;
+        }
     
-    if (response.success)
-
-    {
-    sessionStorage.removeItem("token");
-    setAuthToken(null);
-    setCurrentUser(null);
-
-    toast.dismiss();
-    toast.success("Successfully logged out")
-
-    navigate("http://127.0.0.1:5000/login")
-    }
-
-  })
-}
+        toast.loading("Logging you out ... ");
+    
+        fetch("http://127.0.0.1:5000/logout", {
+          method: "DELETE",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+          .then((resp) => resp.json())
+          .then((response) => {
+            if (response.success) {
+              sessionStorage.removeItem("token");
+              setAuthToken(null);
+              setCurrentUser(null);
+              
+              toast.dismiss();
+              toast.success(response.success);
+              resolve();
+            } else {
+              toast.dismiss();
+              toast.error(response.error || "Failed to logout");
+              reject(response.error);
+            }
+          })
+          .catch((error) => {
+            toast.dismiss();
+            toast.error("Logout failed. Try again.");
+            console.error("Logout Error:", error);
+            reject(error);
+          });
+      });
+    };
+    
  // Fetch current user
  useEffect(()=>{
   fetchCurrentUser()

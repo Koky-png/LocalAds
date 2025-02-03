@@ -40,14 +40,22 @@ def current_user():
 
     return jsonify(user_data)
 
-
-
-# Logout
 @auth_bp.route("/logout", methods=["DELETE"])
 @jwt_required()
 def logout():
-    jti = get_jwt()["jti"]
-    now = datetime.now(timezone.utc)
-    db.session.add(TokenBlocklist(jti=jti, created_at=now))
-    db.session.commit()
-    return jsonify({"success":"Logged out successfully"})
+    try:
+        jti = get_jwt()["jti"]
+        now = datetime.now(timezone.utc)
+
+        # Check if token is already blacklisted
+        existing_token = TokenBlocklist.query.filter_by(jti=jti).first()
+        if existing_token:
+            return jsonify({"error": "Token already invalidated"}), 400
+
+        # Blacklist the token
+        db.session.add(TokenBlocklist(jti=jti, created_at=now))
+        db.session.commit()
+
+        return jsonify({"success": "Logged out successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

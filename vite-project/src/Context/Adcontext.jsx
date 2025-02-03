@@ -4,121 +4,74 @@ export const AdContext = createContext();
 
 export const AdProvider = ({ children }) => {
   const [ads, setAds] = useState([]);
- 
 
-  // Fetch all ads
+  // Fetch all ads when component mounts
   useEffect(() => {
     fetch("http://127.0.0.1:5000/ads")
       .then((response) => response.json())
-      .then((response) => {
-        setAds(response);
-       
-      })
+      .then((data) => setAds(data))
       .catch((error) => console.error("Error fetching ads:", error));
   }, []);
 
-  // Post new ad
+  // ✅ Function to post a new ad
   const addAd = (title, description, price) => {
     fetch("http://127.0.0.1:5000/ads", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       body: JSON.stringify({ title, description, price }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.ad_id) {
-          setAds((prevAds) => [
-            { id: data.ad_id, title, description, price },
-            ...prevAds,
-          ]);
+          setAds((prevAds) => [{ id: data.ad_id, title, description, price }, ...prevAds]);
         } else {
           console.error("Error adding ad:", data.error);
         }
       })
       .catch((error) => console.error("Error posting ad:", error));
   };
-  const updateAd = (id, name, description, scheduled_time) => {
 
-      fetch(`http://127.0.0.1:5000/ads${id}`, {
-          method: "PUT",
-          headers: {
-              "Content-type": "application/json",
-              Authorization:`Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-              name,
-              description,
-              scheduled_time,
-          }),
-      })
+  // ✅ Function to update an existing ad
+  const updateAd = (id, updatedData) => {
+    fetch(`http://127.0.0.1:5000/ads/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+      body: JSON.stringify(updatedData),
+    })
       .then((resp) => resp.json())
       .then((response) => {
-          toast.dismiss();
-          if (response.success) {
-              toast.success(response.success);
-              setOnChange(!onChange); 
-          } else if (response.error) {
-              toast.error(response.error);
-          } else {
-              toast.error("Failed to update Activity");
-          }
+        if (response.msg) {
+          setAds((prevAds) =>
+            prevAds.map((ad) =>
+              ad.id === id ? { ...ad, ...updatedData } : ad
+            )
+          );
+        } else {
+          console.error("Error updating ad:", response.error);
+        }
       })
-      .catch((error) => {
-          toast.dismiss();
-          toast.error("Error updating Activity");
-          console.error("Update Error:", error);
-      });
-      };
+      .catch((error) => console.error("Error updating ad:", error));
+  };
 
+  // ✅ Function to delete an ad
+  const deleteAd = (id) => {
+    fetch(`http://127.0.0.1:5000/ads/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.msg) {
+          setAds((prevAds) => prevAds.filter((ad) => ad.id !== id));
+        } else {
+          console.error("Error deleting ad:", data.error);
+        }
+      })
+      .catch((error) => console.error("Error deleting ad:", error));
+  };
 
-
-  
-  const deleteAd = (id) => 
-    {
-        toast.loading("Deleting todo ... ")
-        fetch(`http://127.0.0.1:5000/todo/${id}`,{
-            method:"DELETE",
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: `Bearer ${authToken}`
-
-              }
-        })
-        .then((resp)=>resp.json())
-        .then((response)=>{
-            
-            if(response.success){
-                toast.dismiss()
-                toast.success(response.success)
-                setOnchange(!onChange)
-                navigate("/")
-
-            }
-            else if(response.error){
-                toast.dismiss()
-                toast.error(response.error)
-
-            }
-            else{
-                toast.dismiss()
-                toast.error("Failed to delete")
-
-            }
-          
-            
-        })
-    }
-    const data = {
-      ads,
-     
- 
-  
-      addAd,
-      updateAd,
-      deleteAd,
-    }
   return (
-    <AdContext.Provider>
+    <AdContext.Provider value={{ ads, addAd, updateAd, deleteAd }}>
       {children}
     </AdContext.Provider>
   );

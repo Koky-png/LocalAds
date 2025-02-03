@@ -3,21 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../Context/Usercontext";
 import { toast } from "react-toastify";
 
-function logout() {
-  const { setAuthToken } = useContext(UserContext); // Use UserContext to clear auth token
+const Logout = () => {
+  const { logout } = useContext(UserContext); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Remove auth token and log the user out
-    setAuthToken(null);
-    localStorage.removeItem("authToken"); // Remove token from local storage
-    toast.success("Logged out successfully!");
-    
-    // Redirect to login page after logout
-    setTimeout(() => {
-      navigate("/login");
-    }, 1500);
-  }, [setAuthToken, navigate]);
+    logout()
+      .then(() => {
+        toast.success("Logged out successfully!");
+        setTimeout(() => {
+          navigate("/login");  
+        }, 1000);
+      })
+      .catch((error) => {
+        toast.error("Failed to logout. Try again.");
+        console.error("Logout Error:", error);
+      });
+  }, [logout, navigate]);
 
   return (
     <div className="container py-5 text-center">
@@ -25,6 +27,6 @@ function logout() {
       <p>You will be redirected to the login page.</p>
     </div>
   );
-}
+};
 
-export default logout;
+export default Logout;

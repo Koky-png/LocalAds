@@ -6,10 +6,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
-import BrowseAds from "./pages/BrowseAd"; // Fixed incorrect import name
+import BrowseAds from "./pages/BrowseAd"; 
 import PostAd from "./pages/PostAd"; 
-import { UserProvider } from "./Context/Usercontext"; // Fixed path
-import { AdProvider } from "./Context/Adcontext"; // Fixed path
+import { UserProvider } from "./Context/Usercontext";
+import { AdProvider } from "./Context/Adcontext";
 import './App.css';
 
 const App = () => {
