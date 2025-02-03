@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
   const login = (email, password_hash) => 
     {
         toast.loading("Logging you in ... ")
-        fetch("http://127.0.0.1:5000/login",{
+        fetch("https://python-p4-project-template-4.onrender.com/login",{
             method:"POST",
             headers: {
                 'Content-type': 'application/json',
@@ -33,7 +33,7 @@ export const UserProvider = ({ children }) => {
 
                 setAuthToken(response.access_token)
 
-                fetch('http://127.0.0.1:5000/current_user',{
+                fetch('https://python-p4-project-template-4.onrender.com/current_user',{
                     method:"GET",
                     headers: {
                         'Content-type': 'application/json',
@@ -73,7 +73,7 @@ export const UserProvider = ({ children }) => {
     
         toast.loading("Logging you out ... ");
     
-        fetch("http://127.0.0.1:5000/logout", {
+        fetch("https://python-p4-project-template-4.onrender.com/logout", {
           method: "DELETE",
           headers: {
             "Content-type": "application/json",
@@ -113,7 +113,7 @@ const fetchCurrentUser = () =>
 {
   console.log("Current user fcn ",authToken);
   
-  fetch("http://127.0.0.1:5000/current_user", {
+  fetch("https://python-p4-project-template-4.onrender.com/current_user", {
       method:"GET",
       headers: {
           'Content-type': 'application/json',
@@ -131,7 +131,7 @@ const fetchCurrentUser = () =>
 const addUser = (username, email, password) => 
   {
       toast.loading("Registering ... ")
-      fetch("http://127.0.0.1:5000/users",{
+      fetch("https://python-p4-project-template-4.onrender.com/users",{
           method:"POST",
           headers: {
               'Content-type': 'application/json',
@@ -173,7 +173,7 @@ const addUser = (username, email, password) =>
     if (!authToken) return false;
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/update_profile", {
+      const response = await fetch("https://python-p4-project-template-4.onrender.com/update_profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

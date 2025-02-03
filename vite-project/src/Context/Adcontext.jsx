@@ -7,7 +7,7 @@ export const AdProvider = ({ children }) => {
 
   // Fetch all ads when component mounts
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/ads")
+    fetch("https://python-p4-project-template-4.onrender.com/ads")
       .then((response) => response.json())
       .then((data) => setAds(data))
       .catch((error) => console.error("Error fetching ads:", error));
@@ -15,7 +15,7 @@ export const AdProvider = ({ children }) => {
 
   // ✅ Function to post a new ad
   const addAd = (title, description, price) => {
-    fetch("http://127.0.0.1:5000/ads", {
+    fetch("https://python-p4-project-template-4.onrender.com/ads", {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       body: JSON.stringify({ title, description, price }),
@@ -33,7 +33,7 @@ export const AdProvider = ({ children }) => {
 
   // ✅ Function to update an existing ad
   const updateAd = (id, updatedData) => {
-    fetch(`http://127.0.0.1:5000/ads/${id}`, {
+    fetch(`https://python-p4-project-template-4.onrender.com/ads/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       body: JSON.stringify(updatedData),
@@ -55,7 +55,7 @@ export const AdProvider = ({ children }) => {
 
   // ✅ Function to delete an ad
   const deleteAd = (id) => {
-    fetch(`http://127.0.0.1:5000/ads/${id}`, {
+    fetch(`https://python-p4-project-template-4.onrender.com/ads/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("token")}` },
     })
