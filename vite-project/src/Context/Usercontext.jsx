@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
   const login = (email, password_hash) => 
     {
         toast.loading("Logging you in ... ")
-        fetch("https://python-p4-project-template-4.onrender.com/login",{
+        fetch("https://localads.onrender.com/login",{
             method:"POST",
             headers: {
                 'Content-type': 'application/json',
@@ -33,7 +33,7 @@ export const UserProvider = ({ children }) => {
 
                 setAuthToken(response.access_token)
 
-                fetch('https://python-p4-project-template-4.onrender.com/current_user',{
+                fetch('https://localads.onrender.com/current_user',{
                     method:"GET",
                     headers: {
                         'Content-type': 'application/json',
@@ -73,7 +73,7 @@ export const UserProvider = ({ children }) => {
     
         toast.loading("Logging you out ... ");
     
-        fetch("https://python-p4-project-template-4.onrender.com/logout", {
+        fetch("https://localads.onrender.com/logout", {
           method: "DELETE",
           headers: {
             "Content-type": "application/json",
@@ -113,7 +113,7 @@ const fetchCurrentUser = () =>
 {
   console.log("Current user fcn ",authToken);
   
-  fetch("https://python-p4-project-template-4.onrender.com/current_user", {
+  fetch("https://localads.onrender.com/current_user", {
       method:"GET",
       headers: {
           'Content-type': 'application/json',
@@ -131,7 +131,7 @@ const fetchCurrentUser = () =>
 const addUser = (username, email, password) => 
   {
       toast.loading("Registering ... ")
-      fetch("https://python-p4-project-template-4.onrender.com/users",{
+      fetch("https://localads.onrender.com/users",{
           method:"POST",
           headers: {
               'Content-type': 'application/json',
@@ -173,7 +173,7 @@ const addUser = (username, email, password) =>
     if (!authToken) return false;
 
     try {
-      const response = await fetch("https://python-p4-project-template-4.onrender.com/update_profile", {
+      const response = await fetch("https://localads.onrender.com/update_profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
