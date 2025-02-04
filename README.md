@@ -123,23 +123,23 @@ The Local Classified Ads Platform is a comprehensive web application designed to
 
 ---
 
-## **Screenshots**
 
-### **Home Page**
-![Home Page Screenshot](path/to/homepage-screenshot.png)
+https://github.com/user-attachments/assets/d3cda278-b0ce-4b0a-b72d-26dba5c74dcf
 
-### **Login Page**
-![Login Page Screenshot](path/to/login-screenshot.png)
 
-### **Profile Page**
-![Profile Page Screenshot](path/to/profile-screenshot.png)
 
+### **Frontend **
+
+https://github.com/user-attachments/assets/bd339924-1b15-4a47-95ef-e210034c527c
 ---
 
 ## **Contributing**
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
+3. Commit your changes (`git 
+
+
+commit -m 'Add some feature'`).
 4. Push to the branch (`git push origin feature-name`).
 5. Open a pull request.
 
